@@ -6,3 +6,6 @@ pip install psycopg2 (If you see an error here just run pip install psycopg2-bin
 
 ### Create a file called "db_secrets.py" with the following variables from a server running postgreSQL
 dabatase, user, password, host, port
+
+### Then type this to run the project
+python3 main.py
