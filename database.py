@@ -1,8 +1,9 @@
 import psycopg2
+import db_secrets
 
 # Function to connect to the database
 def connect_db():
-    return psycopg2.connect(database="postgres", user="postgres", password="vasco123", host="127.0.0.1", port="5432")
+    return psycopg2.connect(database=db_secrets.database, user=db_secrets.user, password=db_secrets.password, host=db_secrets.host, port=db_secrets.port)
 
 # Function to execute an SQL file
 def execute_sql_file(conn, filename):
