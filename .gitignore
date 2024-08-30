@@ -1,2 +1,3 @@
 my_env
 db_secrets.py
+__pycache__
