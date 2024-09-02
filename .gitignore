@@ -1,3 +1,6 @@
 my_env
 db_secrets.py
 __pycache__
+build
+dist
+main.spec

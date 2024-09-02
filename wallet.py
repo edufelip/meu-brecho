@@ -2,7 +2,6 @@ import tkinter as tk
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import database
-import calendar
 
 class WalletScreen(tk.Frame):
     def __init__(self, parent, controller, conn):
