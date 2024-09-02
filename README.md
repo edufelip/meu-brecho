@@ -23,3 +23,7 @@ python3 main.py
 pip install pyinstaller
 pyinstaller --onefile --windowed main.py
 ```
+
+## Midia
+
+https://github.com/user-attachments/assets/f59a9aa6-4957-49ce-b131-70f35df668d0
