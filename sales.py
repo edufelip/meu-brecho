@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+from tkinter import messagebox
 import database 
 
 class SalesScreen(tk.Frame):
@@ -70,13 +71,20 @@ class SalesScreen(tk.Frame):
         product_price = float(product_values[1].replace("R$", ""))
         product_quantity = int(product_values[2])
 
-        database.insert_sale(self.conn, product_name, product_price)
+        try:
+            database.insert_sale(self.conn, product_name, product_price)
+            messagebox.showinfo("Successo", "Venda registrada")
+        except Exception as e:
+            messagebox.showerror("Ocorreu um erro ao registrar a sua venda", str(e))
 
-        if product_quantity == 1:
-            database.delete_product(self.conn, product_name)
-        else:
-            new_quantity = product_quantity - 1
-            database.update_product_quantity(self.conn, product_name, new_quantity)
+        try:
+            if product_quantity == 1:
+                database.delete_product(self.conn, product_name)
+            else:
+                new_quantity = product_quantity - 1
+                database.update_product_quantity(self.conn, product_name, new_quantity)
+        except Exception as e:
+            messagebox.showerror("Ocorreu um erro ao atualizar a lista", str(e))
 
         self.load_products()
         self.selected_product.set("")

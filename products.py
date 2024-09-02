@@ -101,7 +101,7 @@ class ProductsScreen(tk.Frame):
 
     def save_product(self):
         name = self.entry_name.get()
-        price = self.entry_price.get()
+        price = float(self.entry_price.get().replace("R$", ""))
         quantity = self.entry_quantity.get()
         
         if not name or not price or not quantity:
