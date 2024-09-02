@@ -9,7 +9,7 @@ class MyApp(tk.Tk):
         tk.Tk.__init__(self)
         self.conn = conn
         self.title("Meu Brechó")
-        self.geometry("500x400")
+        self.geometry("800x500")
 
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
@@ -35,20 +35,26 @@ class MainPage(tk.Frame):
     def __init__(self, parent, controller, conn):
         tk.Frame.__init__(self, parent)
 
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_rowconfigure(5, weight=1)
+        self.grid_columnconfigure(0, minsize=100) 
+        self.grid_columnconfigure(2, minsize=100)
+        self.grid_columnconfigure(1, weight=1)
+
         main_title = tk.Label(self, text="Meu Brechó", font=("Arial", 24))
-        main_title.grid(row=1, column=0, pady=20)
-
-        btn_products = tk.Button(self, text="My Products", width=20, 
+        main_title.grid(row=1, column=1, pady=20, sticky="nsew")
+        
+        btn_products = tk.Button(self, text="Meu Estoque", width=20, 
                                  command=lambda: controller.show_frame("ProductsScreen"))
-        btn_products.grid(row=2, column=0, pady=10)
-
-        btn_sales = tk.Button(self, text="Sales", width=20, 
+        btn_products.grid(row=2, column=1, pady=10, sticky="nsew")
+        
+        btn_sales = tk.Button(self, text="Minhas vendas", width=20, 
                               command=lambda: controller.show_frame("SalesScreen"))
-        btn_sales.grid(row=3, column=0, pady=10)
+        btn_sales.grid(row=3, column=1, pady=10, sticky="nsew")
 
-        btn_wallet = tk.Button(self, text="Wallet", width=20, 
+        btn_wallet = tk.Button(self, text="Carteira", width=20, 
                                command=lambda: controller.show_frame("WalletScreen"))
-        btn_wallet.grid(row=4, column=0, pady=10)
+        btn_wallet.grid(row=4, column=1, pady=10, sticky="nsew")
 
 if __name__ == "__main__":
     conn = database.connect_db()
