@@ -14,38 +14,51 @@ class ProductsScreen(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        back_button = tk.Button(self, text="Back", command=self.go_back)
-        back_button.grid(row=0, column=0)
+        self.grid_columnconfigure(3, weight=1)
+        self.grid_columnconfigure(5, weight=1)
 
-        tk.Label(self, text="Nome do produto").grid(row=1, column=0)
+        self.back_button = tk.Button(self, text="Voltar", command=self.go_back)
+        self.back_button.grid(row=0, column=1, pady=20, padx=10, sticky="w")
+
+        tk.Label(self, text="Nome do produto").grid(row=1, column=1, sticky="w", padx=10)
         self.entry_name = tk.Entry(self)
-        self.entry_name.grid(row=1, column=1)
+        self.entry_name.grid(row=1, column=2, padx=10)
 
-        tk.Label(self, text="Preço").grid(row=2, column=0)
+        tk.Label(self, text="Preço").grid(row=2, column=1, sticky="w", padx=10)
         self.entry_price = tk.Entry(self)
-        self.entry_price.grid(row=2, column=1)
+        self.entry_price.grid(row=2, column=2, padx=10)
 
-        tk.Label(self, text="Quantidade").grid(row=3, column=0)
-        self.entry_quantity = tk.Entry(self)
-        self.entry_quantity.grid(row=3, column=1)
+        tk.Label(self, text="Quantidade").grid(row=3, column=1, sticky="w", padx=10)
 
-        decrease_button = tk.Button(self, text="-", command=self.decrease_quantity)
-        decrease_button.grid(row=3, column=2)
-        increase_button = tk.Button(self, text="+", command=self.increase_quantity)
-        increase_button.grid(row=3, column=3)
+        quantity_frame = tk.Frame(self)
+        quantity_frame.grid(row=3, column=2, padx=10, sticky="w")
 
-        tk.Button(self, text="Salvar", command=self.save_product).grid(row=4, column=0)
-        tk.Button(self, text="Atualizar", command=self.update_product).grid(row=4, column=1)
-        tk.Button(self, text="Deletar", command=self.delete_product).grid(row=4, column=2)
+        self.entry_quantity = tk.Entry(quantity_frame, width=5)
+        self.entry_quantity.pack(side=tk.LEFT)
 
-        columns = ("id", "name", "price", "quantity")
-        self.product_listbox = ttk.Treeview(self, columns=columns, show='headings')
+        self.decrease_button = tk.Button(quantity_frame, text="-", command=self.decrease_quantity)
+        self.decrease_button.pack(side=tk.LEFT, padx=(5, 0))
+
+        self.increase_button = tk.Button(quantity_frame, text="+", command=self.increase_quantity)
+        self.increase_button.pack(side=tk.LEFT, padx=(5, 0))
+
+        self.button_frame = tk.Frame(self)
+        self.button_frame.grid(row=4, column=1, columnspan=3, pady=(20, 10), sticky="nsew")
+
+        tk.Button(self.button_frame, text="Salvar", command=self.save_product).pack(side="left", padx=10)
+        tk.Button(self.button_frame, text="Atualizar", command=self.update_product).pack(side="left", padx=10)
+        tk.Button(self.button_frame, text="Deletar", command=self.delete_product).pack(side="left", padx=10)
+
+        self.columns = ("id", "name", "price", "quantity")
+        self.product_listbox = ttk.Treeview(self, columns=self.columns, show='headings')
         self.product_listbox.heading("id", text="ID")
         self.product_listbox.heading("name", text="Nome do Produto")
         self.product_listbox.heading("price", text="Preço")
         self.product_listbox.heading("quantity", text="Quantidade")
-        self.product_listbox.grid(row=5, column=0, columnspan=4)
-        self.product_listbox.bind('<ButtonRelease-1>', self.on_product_select)
+        self.product_listbox.grid(row=5, column=1, columnspan=3, pady=(10, 20), sticky="nsew", padx=10)
+
+        # Bind the selection event to the on_product_select method
+        self.product_listbox.bind("<<TreeviewSelect>>", self.on_product_select)
 
         self.load_products()
 
