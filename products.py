@@ -14,6 +14,7 @@ class ProductsScreen(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
+        self.grid_rowconfigure(5, weight=1)
         self.grid_columnconfigure(3, weight=1)
         self.grid_columnconfigure(5, weight=1)
 
@@ -49,13 +50,12 @@ class ProductsScreen(tk.Frame):
         tk.Button(self.button_frame, text="Atualizar", command=self.update_product).pack(side="left", padx=10)
         tk.Button(self.button_frame, text="Deletar", command=self.delete_product).pack(side="left", padx=10)
 
-        self.columns = ("id", "name", "price", "quantity")
+        self.columns = ("name", "price", "quantity")
         self.product_listbox = ttk.Treeview(self, columns=self.columns, show='headings')
-        self.product_listbox.heading("id", text="ID")
         self.product_listbox.heading("name", text="Nome do Produto")
         self.product_listbox.heading("price", text="Preço")
         self.product_listbox.heading("quantity", text="Quantidade")
-        self.product_listbox.grid(row=5, column=1, columnspan=3, pady=(10, 20), sticky="nsew", padx=10)
+        self.product_listbox.grid(row=5, column=1, columnspan=5, pady=(10, 20), sticky="nsew", padx=10)
 
         # Bind the selection event to the on_product_select method
         self.product_listbox.bind("<<TreeviewSelect>>", self.on_product_select)
@@ -68,9 +68,9 @@ class ProductsScreen(tk.Frame):
 
     def load_products(self):
         self.product_listbox.delete(*self.product_listbox.get_children())
-        products = database.get_all_products(self.conn)
-        for row in products:
-            self.product_listbox.insert("", "end", values=row)
+        self.products = database.get_all_products(self.conn)
+        for product in self.products:
+            self.product_listbox.insert("", "end", values=(product[1], f"R${product[2]:.2f}", product[3]))
 
     def clear_fields(self):
         self.entry_name.delete(0, tk.END)
@@ -85,13 +85,19 @@ class ProductsScreen(tk.Frame):
         selected_product = self.product_listbox.item(selected_item[0], 'values')
         
         self.entry_name.delete(0, tk.END)
-        self.entry_name.insert(0, selected_product[1])
+        self.entry_name.insert(0, selected_product[0])
         self.entry_price.delete(0, tk.END)
-        self.entry_price.insert(0, selected_product[2])
+        self.entry_price.insert(0, selected_product[1])
         self.entry_quantity.delete(0, tk.END)
-        self.entry_quantity.insert(0, selected_product[3])
+        self.entry_quantity.insert(0, selected_product[2])
 
         self.update_quantity_buttons()
+
+    def product_exists(self, name):
+        for product in self.products:
+            if product[1] == name:
+                return True
+        return False
 
     def save_product(self):
         name = self.entry_name.get()
@@ -102,6 +108,10 @@ class ProductsScreen(tk.Frame):
             messagebox.showwarning("Erro", "Por favor preencha todos os campos")
             return
 
+        if self.product_exists(name):
+            messagebox.showwarning("Erro", "Ja existe um produto com esse nome")
+            return
+        
         try:
             database.insert_product(self.conn, name, price, quantity)
             self.load_products()
@@ -118,8 +128,8 @@ class ProductsScreen(tk.Frame):
         
         selected_product_id = self.product_listbox.item(selected_item[0], 'values')[0]
         new_name = self.entry_name.get()
-        new_price = self.entry_price.get()
         new_quantity = self.entry_quantity.get()
+        new_price = float(self.entry_price.get().replace("R$", ""))
 
         try:
             database.update_product(self.conn, selected_product_id, new_name, new_price, new_quantity)
@@ -187,6 +197,5 @@ def run_products_screen(conn, root):
 if __name__ == "__main__":
     root = tk.Tk()
     conn = database.connect_db()
-    database.create_table(conn)
     run_products_screen(conn, root)
     root.mainloop()

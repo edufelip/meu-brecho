@@ -9,7 +9,7 @@ class MyApp(tk.Tk):
         tk.Tk.__init__(self)
         self.conn = conn
         self.title("Meu Brechó")
-        self.geometry("800x500")
+        self.geometry("800x600")
 
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
@@ -52,7 +52,7 @@ class MainPage(tk.Frame):
                               command=lambda: controller.show_frame("SalesScreen"))
         btn_sales.grid(row=3, column=1, pady=10, sticky="nsew")
 
-        btn_wallet = tk.Button(self, text="Carteira", width=20, 
+        btn_wallet = tk.Button(self, text="Balanço", width=20, 
                                command=lambda: controller.show_frame("WalletScreen"))
         btn_wallet.grid(row=4, column=1, pady=10, sticky="nsew")
 

@@ -1,11 +1,15 @@
-### Steps to run the project
-python3 -m venv my_env
-macOS -> source my_env/bin/activate || windows -> ./my_env/Scripts/Activate
-pip install tk
-pip install psycopg2 (If you see an error here just run pip install psycopg2-binary)
+## Meu Brecho
+Esse é um programa feito para ajudar brechós no gerenciamento de estoque e vendas
 
-### Create a file called "db_secrets.py" with the following variables from a server running postgreSQL
+### Passos para rodar o projeto
+python3 -m venv my_env
+./my_env/Scripts/Activate
+pip install tk
+pip install psycopg2
+python3 -m pip install matplotlib
+
+### Crie um arquivo chamado "db_secrets.py" na raiz do projeto com as seguintes variáveis referentes ao banco de dados PostgreSQL
 dabatase, user, password, host, port
 
-### Then type this to run the project
+### Entao execute esse comando para rodar o projeto
 python3 main.py

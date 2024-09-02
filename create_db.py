@@ -10,10 +10,13 @@ def execute_sql_file():
         conn = connect_db()
         cur = conn.cursor()
 
-        cur.execute("DROP TABLE products, sales")
+        cur.execute('''CREATE TABLE IF NOT EXISTS products 
+                    (id SERIAL PRIMARY KEY, name TEXT NOT NULL, price DECIMAL(10,2) NOT NULL, quantity INTEGER NOT NULL)''')
+        cur.execute('''CREATE TABLE IF NOT EXISTS sales 
+                    (id SERIAL PRIMARY KEY, name TEXT NOT NULL, price DECIMAL(10,2) NOT NULL, date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)''')
         conn.commit()
 
-        print(f"Executed table drop successfully.")
+        print(f"Table created successfully.")
 
     except Exception as e:
         print(f"Error: {str(e)}")

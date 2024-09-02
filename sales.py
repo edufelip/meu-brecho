@@ -38,8 +38,11 @@ class SalesScreen(tk.Frame):
 
         self.load_products()
 
+    def tkraise(self, *args, **kwargs):
+        self.load_products()
+        super().tkraise(*args, **kwargs)
+
     def go_back(self):
-        """Go back to the main menu"""
         self.controller.show_frame("MainPage")
 
     def load_products(self):
@@ -48,7 +51,7 @@ class SalesScreen(tk.Frame):
 
         products = database.get_all_products(self.conn)
         for product in products:
-            self.product_listbox.insert("", "end", values=(product[1], f"${product[2]:.2f}", product[3]))
+            self.product_listbox.insert("", "end", values=(product[1], f"R${product[2]:.2f}", product[3]))
 
     def on_product_select(self, event):
         selected_item = self.product_listbox.selection()[0]
@@ -64,21 +67,18 @@ class SalesScreen(tk.Frame):
         product_values = self.product_listbox.item(selected_item, 'values')
 
         product_name = product_values[0]
-        product_price = float(product_values[1].replace("$", ""))
+        product_price = float(product_values[1].replace("R$", ""))
         product_quantity = int(product_values[2])
 
         database.insert_sale(self.conn, product_name, product_price)
 
         if product_quantity == 1:
-            product_id = database.get_product_id_by_name(self.conn, product_name)
-            database.delete_product(self.conn, product_id)
+            database.delete_product(self.conn, product_name)
         else:
-            product_id = database.get_product_id_by_name(self.conn, product_name)
             new_quantity = product_quantity - 1
-            database.update_product_quantity(self.conn, product_id, new_quantity)
+            database.update_product_quantity(self.conn, product_name, new_quantity)
 
         self.load_products()
-
         self.selected_product.set("")
         self.btn_register_sale.config(state='disabled')
 
