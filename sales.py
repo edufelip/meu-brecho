@@ -13,23 +13,34 @@ class SalesScreen(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        tk.Label(self, text="Item:").grid(row=0, column=0, padx=10, pady=10)
-        
-        self.entry_product = tk.Entry(self, textvariable=self.selected_product, state='readonly', width=30)
-        self.entry_product.grid(row=0, column=1, padx=10, pady=10)
+        self.grid_rowconfigure(3, weight=1)
+        self.grid_columnconfigure(0, weight=1)
 
-        self.btn_register_sale = tk.Button(self, text="Register Sale", command=self.register_sale, state='disabled')
-        self.btn_register_sale.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
+        self.back_button = tk.Button(self, text="Voltar", command=self.go_back)
+        self.back_button.grid(row=0, column=0, pady=10, padx=10, sticky="w")
+
+        item_frame = tk.Frame(self)
+        item_frame.grid(row=1, column=0, padx=0, sticky="w")
+        tk.Label(item_frame, text="Item:").pack(side=tk.LEFT, padx=(10, 0))
+        self.entry_product = tk.Entry(item_frame, textvariable=self.selected_product, state='readonly', width=30)
+        self.entry_product.pack(side=tk.LEFT, padx=(5, 0))
+
+        self.btn_register_sale = tk.Button(self, text="Registrar venda", command=self.register_sale, state='disabled')
+        self.btn_register_sale.grid(row=2, column=0, padx=10, pady=10, sticky="w")
 
         self.product_listbox = ttk.Treeview(self, columns=('Name', 'Price', 'Quantity'), show='headings')
-        self.product_listbox.heading('Name', text='Name')
-        self.product_listbox.heading('Price', text='Price')
-        self.product_listbox.heading('Quantity', text='Quantity')
-        self.product_listbox.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
+        self.product_listbox.heading('Name', text='Nome')
+        self.product_listbox.heading('Price', text='Preço')
+        self.product_listbox.heading('Quantity', text='Quantidade')
+        self.product_listbox.grid(row=3, column=0, columnspan=3, pady=(10, 20), sticky="nsew", padx=10)
 
         self.product_listbox.bind('<<TreeviewSelect>>', self.on_product_select)
 
         self.load_products()
+
+    def go_back(self):
+        """Go back to the main menu"""
+        self.controller.show_frame("MainPage")
 
     def load_products(self):
         for item in self.product_listbox.get_children():
@@ -42,7 +53,7 @@ class SalesScreen(tk.Frame):
     def on_product_select(self, event):
         selected_item = self.product_listbox.selection()[0]
         product_values = self.product_listbox.item(selected_item, 'values')
-        product_name = product_values[0]  # Extract the product name
+        product_name = product_values[0]
 
         self.selected_product.set(product_name)
 
